@@ -6,11 +6,10 @@ Material 1:
   sigma_f: 0.0
   s: 1.0
   bounds: (0.0, 10.0, 0.0, 10.0)
-  bound_type: (1, 1, 0, 0)
+  bound_type: (1, true, 0, 0)
 
 Material 2:
-  name: Fuel
-  sigma_s: 0.5
+  sigma__s: 0.5
   sigma_a: 0.02
   mu_0: 0.1
   sigma_f: 0.05
