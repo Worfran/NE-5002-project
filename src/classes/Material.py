@@ -1,5 +1,3 @@
-
-
 class Material:
     def __init__(self, name, sigma__tr, sigma_a, mu_0, sigma_f, s, bounds, bound_type):
         """Initialize a Material instance.

@@ -1,33 +1,10 @@
-import os 
+import os
 import tempfile
-import ultraimport
-
-# Dynamically import the File_reader module using ultraimport
-File_reader = ultraimport('__dir__/../classes/File_reader.py')
+from src.classes.File_reader import parse_materials_from_file
 
 def test_parse_materials():
-    # Create a temporary file with two materials
-    materials_data = """\
-Material 1:
-  name: Water
-  sigma_tr: 0.21
-  sigma_a: 0.01
-  mu_0: 0.0
-  sigma_f: 0.0
-  s: 1.0
-  bounds: (0.0, 10.0, 0.0, 10.0)
-  bound_type: (1, 1, 0, 0)
 
-Material 2:
-  name: Fuel
-  sigma__tr: 0.5
-  sigma_a: 0.02
-  mu_0: 0.1
-  sigma_f: 0.05
-  s: 0.0
-  bounds: (10.0, 20.0, 0.0, 10.0)
-  bound_type: (0, 0, 0, 0)
-"""
+    materials_data = "../../input_files_examples/test_1.txt"
     # Write the materials data to a temporary file
     with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.txt') as temp_file:
         temp_file.write(materials_data)
@@ -35,7 +12,7 @@ Material 2:
 
     try:
         # Parse the materials from the file
-        materials = File_reader.parse_materials_from_file(temp_file_path)
+        materials = parse_materials_from_file(temp_file_path)
 
         # Assertions for Material 1
         assert len(materials) == 2, "Expected 2 materials to be parsed"

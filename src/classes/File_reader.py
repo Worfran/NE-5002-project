@@ -1,9 +1,6 @@
 import re
 from typing import List, Tuple
-import ultraimport
-
-# Dynamically import the Material class using ultraimport
-Material = ultraimport('__dir__/Mateial.py').Material
+from src.classes.Material import Material  # Import the Material class
 
 def _parse_floats_tuple(s: str) -> Tuple[float, ...]:
     s = s.strip()

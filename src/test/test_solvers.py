@@ -1,5 +1,5 @@
 import numpy as np
-from classes.Solvers import Solvers
+from src.classes.Solvers import Solvers
 
 A = np.array([[4., 3., 0.],
               [3., 4., -1.],
