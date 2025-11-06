@@ -9,8 +9,8 @@ class Material:
             mu_0 (float): Average cosine of the scattering angle.
             sigma_f (float): Fission cross-section.
             s (float): Source term.
-            bounds (tuple - float): Spatial bounds of the material. in 2D (x_0, x_1, y_0, y_1).
-            bound_type (tuple - boolean): Type of boundary condition. in 2D (true for reflective, false for vacuum) (x_0, x_1, y_0, y_1).
+            bounds (tuple - float): Spatial bounds of the material. in 2D (W, H).
+            bound_type (tuple - boolean): Type of boundary condition. in 2D (true for vacuum, false for reflective) (x_0, x_1, y_0, y_1).
         """
         self.name = name
         self.sigma_s = sigma_s
@@ -20,7 +20,7 @@ class Material:
         self.s = s
         self.bounds = bounds
         self.bound_type = bound_type
-        self.sigma_tr = None
+        self.compute_sigma_tr()
 
     # getters
     def get_name(self):
@@ -46,6 +46,12 @@ class Material:
     
     def get_bound_type(self):
         return self.bound_type
+    
+    def get_hight(self):
+        return self.bounds[1]
+
+    def get_width(self):
+        return self.bounds[0]
     
     def get_sigma_tr(self):
         """Calculate the transport cross-section.
@@ -73,9 +79,6 @@ class Material:
     def set_s(self, s):
         self.s = s
 
-    def set_bounds(self, bounds):
-        self.bounds = bounds
-
     def set_bound_type(self, bound_type):
         self.bound_type = bound_type
 
@@ -99,14 +102,25 @@ class Material:
         Returns:
             float: Extrapolated boundary distance.
         """
-        return 0.7104 / self.sigma__s
-    
+        if self.sigma_tr is None:
+            self.compute_sigma_tr()
+        if self.sigma_tr == 0:
+            raise ValueError("Transport cross-section cannot be zero for extrapolated boundary calculation. Check material properties.")
+        
+        return 0.7104 / self.sigma_tr
+
     def diffusion_coefficient(self):
         """Calculate the diffusion coefficient based on the transport cross-section.
         Returns:
             float: Diffusion coefficient.
         """
-        return 1 / (3 * self.sigma__s)
+        if self.sigma_tr == 0:
+            raise ValueError("Transport cross-section cannot be zero for diffusion coefficient calculation. Check material properties.")
+        elif self.sigma_tr is None:
+            self.compute_sigma_tr()
+
+        D = 1 / (3 * self.sigma_tr)
+        return D
     
     def solution_bounds(self):
         """Get the solution bounds adjusted for extrapolated boundary conditions.

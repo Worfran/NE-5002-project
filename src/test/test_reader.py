@@ -17,7 +17,7 @@ def test_document_reader_with_test_1():
     assert material1.get_mu_0() == 0.0
     assert material1.get_sigma_f() == 0.0
     assert material1.get_s() == 1.0
-    assert material1.get_bounds() == (0.0, 10.0, 0.0, 10.0)
+    assert material1.get_bounds() == (10.0, 10.0)
     assert material1.get_bound_type() == (True, True, False, False)
 
     # Assertions for Material 2
@@ -28,7 +28,7 @@ def test_document_reader_with_test_1():
     assert material2.get_mu_0() == 0.1
     assert material2.get_sigma_f() == 0.05
     assert material2.get_s() == 0.0
-    assert material2.get_bounds() == (10.0, 20.0, 0.0, 10.0)
+    assert material2.get_bounds() == (20.0, 10.0)
     assert material2.get_bound_type() == (False, False, False, False)
 
     print("Test 1 passed!")
@@ -50,7 +50,7 @@ def test_document_reader_with_test_2():
     assert material1.get_mu_0() == 0.0
     assert material1.get_sigma_f() == 0.0
     assert material1.get_s() == 1.0
-    assert material1.get_bounds() == (0.0, 10.0, 0.0, 10.0)
+    assert material1.get_bounds() == (10.0, 10.0)
     assert material1.get_bound_type() == (True, True, False, False)
 
     # Assertions for Material 2
@@ -61,7 +61,7 @@ def test_document_reader_with_test_2():
     assert material2.get_mu_0() == 0.1
     assert material2.get_sigma_f() == 0.01
     assert material2.get_s() == 0.0
-    assert material2.get_bounds() == (10.0, 20.0, 0.0, 10.0)
+    assert material2.get_bounds() == (20.0,10.0)
     assert material2.get_bound_type() == (False, False, False, False)
 
     # Assertions for Material 3
@@ -72,7 +72,7 @@ def test_document_reader_with_test_2():
     assert material3.get_mu_0() == 0.0
     assert material3.get_sigma_f() == 0.0
     assert material3.get_s() == 1.0
-    assert material3.get_bounds() == (0.0, 10.0, 0.0, 10.0)
+    assert material3.get_bounds() == (10.0, 10.0)
     assert material3.get_bound_type() == (True, True, False, False)
 
     print("Test 2 passed!")

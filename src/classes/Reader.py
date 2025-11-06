@@ -23,7 +23,7 @@ class DocumentReader:
             mu_0 = float(self._extract_parameter(block, 'mu_0', default=0.0))
             sigma_f = float(self._extract_parameter(block, 'sigma_f', default=0.0))
             s = float(self._extract_parameter(block, 's', default=0.0))
-            bounds = self._extract_tuple(block, 'bounds', expected_length=4)
+            bounds = self._extract_tuple(block, 'bounds', expected_length=2)
             bound_type = self._extract_tuple(block, 'bound_type', expected_length=4, is_bool=True)
 
             material = Material(name, sigma_s, sigma_a, mu_0, sigma_f, s, bounds, bound_type)
