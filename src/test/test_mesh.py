@@ -108,18 +108,18 @@ def test_mesh_constructor_with_reflecting_boundaries():
     # Verify extrapolated boundaries
     assert mesh.max_extrapolated_distance_top == max_extrapolated_distance, f"Expected max extrapolated distance top to be {max_extrapolated_distance}, got {mesh.max_extrapolated_distance_top}"
     assert mesh.max_extrapolated_distance_bottom == 0, "Expected max extrapolated distance bottom to be 0"
-    assert mesh.extrapolated_distances_left == 0, "Expected extrapolated distances left to be 0"
     assert mesh.extrapolated_distances_right == 0.7104 / sigma_tr_fuel, f"Expected extrapolated distances right to be {0.7104 / sigma_tr_fuel}, got {mesh.extrapolated_distances_right}"
+    assert mesh.extrapolated_distances_left == 0, "Expected extrapolated distances left to be 0"
 
     # Compute total size
     mesh.compute_total_size()
-    assert mesh.total_width == 30.0, f"Expected total width to be 30.0, got {mesh.total_width}"
-    assert mesh.total_height == 10.0, f"Expected total height to be 10.0, got {mesh.total_height}"
+    assert mesh.total_width == 30.0 + 0.7104 / sigma_tr_fuel, f"Expected total width to be {30.0 + 0.7104 / sigma_tr_fuel}, got {mesh.total_width}"
+    assert mesh.total_height == 10.0 + max_extrapolated_distance, f"Expected total height to be {10.0 + max_extrapolated_distance}, got {mesh.total_height}"
 
     # Compute cell sizes
     dx, dy = mesh.compute_cell_sizes()
-    assert dx == 1.0, f"Expected dx to be 1.0, got {dx}"
-    assert dy == 1.0, f"Expected dy to be 1.0, got {dy}"
+    assert dx == (30.0 + 0.7104 / sigma_tr_fuel) / ncells_x, f"Expected dx to be {(30.0 + 0.7104 / sigma_tr_fuel) / ncells_x}, got {dx}"
+    assert dy == (10.0 + max_extrapolated_distance) / ncells_y, f"Expected dy to be {(10.0 + max_extrapolated_distance) / ncells_y}, got {dy}"
 
 
     # Create material matrix
