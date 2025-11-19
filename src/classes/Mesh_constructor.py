@@ -110,24 +110,24 @@ class Mesh_constructor:
         self.Dcells = np.zeros((self.ncells_y, self.ncells_x))
         self.Sigma_acells = np.zeros((self.ncells_y, self.ncells_x))
         self.compute_cell_sizes()
-
+        current_x = 0
+        n, m = self.ncells_x, self.ncells_y
 
         for material in self.materials:
             W, H = material.get_bounds()  # Get the width and height of the material
-            material_cells_x = int(W / self.dx)  # Number of cells the material spans in x-direction
-            material_cells_y = int(H / self.dy)  # Number of cells the material spans in y-direction
+
 
             # Fill the grid with the material properties
-            for i in range(0, material_cells_y):
-                if i >= self.ncells_y:  # Stop if we exceed the grid height
-                    break
+            for i in range(0, m):                
+                material_cells_x = int(W // self.dx)  # Number of cells the material spans in x-direction
                 
-                current_x = 0
+                # Determine how many cells in x-d
+                print(current_x, material_cells_x)
                 for j in range(current_x, current_x + material_cells_x):
-                    if j >= self.ncells_x:  # Stop if we exceed the grid width
-                        break
                     self.Dcells[i, j] = material.diffusion_coefficient()
                     self.Sigma_acells[i, j] = material.get_sigma_a()
+                
+            current_x += material_cells_x  # Move to the next position in x-d
 
 
 
