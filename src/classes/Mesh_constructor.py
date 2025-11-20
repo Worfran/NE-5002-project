@@ -122,7 +122,6 @@ class Mesh_constructor:
                 material_cells_x = int(W // self.dx)  # Number of cells the material spans in x-direction
                 
                 # Determine how many cells in x-d
-                print(current_x, material_cells_x)
                 for j in range(current_x, current_x + material_cells_x):
                     self.Dcells[i, j] = material.diffusion_coefficient()
                     self.Sigma_acells[i, j] = material.get_sigma_a()

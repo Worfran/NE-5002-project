@@ -57,7 +57,7 @@ def test_small_mesh_with_two_materials():
     print("Test for small mesh with two materials passed!")
 
 if __name__ == "__main__":
-    #test_small_mesh_with_two_materials()
+    test_small_mesh_with_two_materials()
 
     # Create a small mesh and materials for testing
     ncells_x = 4
