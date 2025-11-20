@@ -78,7 +78,7 @@ class Solvers:
             x = x_new
         return x
 
-    def sor(self, omega=1.25, x0=None, tol=None, max_iter=None):
+    def sor(self, omega=1.25, x0=None, tol=1e-6, max_iter=1e12):
         A = self.A
         b = self.b
         x = self.x0 if x0 is None else np.asarray(x0, dtype=float)
