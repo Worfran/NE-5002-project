@@ -2,19 +2,33 @@ import numpy as np
 from src.classes.Material import Material as mat
 
 class Matrix_constructor:
-    def __init__(self, ncells_x, ncells_y, Dcell, Sigma_a_cell, dx, dy, materials):
+    def __init__(self, ncells_x, ncells_y, Dcell, Sigma_a_cell, source_cells, dx, dy, materials, interfaces_x):
 
         self.ncells_x = ncells_x
         self.ncells_y = ncells_y
         self.materials = materials
         self.Dcell = Dcell
         self.Sigma_a_cell = Sigma_a_cell
+        self.source_cells = source_cells
+        self.interfaces_x = interfaces_x
         self.dx = dx
         self.dy = dy
         self.A = np.zeros((self.ncells_y*self.ncells_x, self.ncells_y*self.ncells_x))
         self.b = np.zeros(self.ncells_y * self.ncells_x)
         self.construct_matrix()
+        self.source_term()
 
+    def source_term(self):
+        self.b = np.zeros(self.ncells_y * self.ncells_x)
+        m, n = self.ncells_y, self.ncells_x
+        for i in range(m): #m
+            for j in range(n): #n
+                l = (i*n + j)
+                self.b[l] = self.source_cells[i, j]
+                if j in self.interfaces_x and self.source_cells[i, j-1] != self.source_cells[i, j]:
+                    self.b[l] = (self.source_cells[i, j] + self.source_cells[i, j-1])/2
+                elif j in self.interfaces_x and self.source_cells[i, j+1] != self.source_cells[i, j]:
+                    self.b[l] = (self.source_cells[i, j] + self.source_cells[i, j+1])/2
 
     def construct_matrix(self):
         for i in range(self.Dcell.shape[0]):
@@ -35,17 +49,24 @@ class Matrix_constructor:
 
         ic = (m-i)*n - (m-j) - 1 # Index of the diagonal element in A
 
-        if a_left:
+
+        if a_left and (j in self.interfaces_x):
             sum_aij -= (Dcell[i, j]*dy + Dcell[i, j-1]*dy) / 2*dx
             self.A[ic-1, ic] = - (Dcell[i, j]*dy + Dcell[i, j-1]*dy) / 2*dx
+        elif a_left:
+            sum_aij -= Dcell[i, j]*dy / dx
+            self.A[ic-1, ic] = - Dcell[i, j]*dy / dx
         elif a_left_vaccum:
             sum_aij -= Dcell[i, j]*dy / dx
         elif not a_left and not a_left_vaccum:
             sum_aij -= Dcell[i, j]*dy / 2*dx
 
-        if a_right:
+        if a_right and (j in self.interfaces_x):
             self.A[ic+1, ic] = - (Dcell[i, j]*dy + Dcell[i, j+1]*dy) / 2*dx
             sum_aij -= (Dcell[i, j]*dy + Dcell[i, j+1]*dy) / 2*dx
+        elif a_right:
+            self.A[ic+1, ic] = - Dcell[i, j]*dy / dx
+            sum_aij -= Dcell[i, j]*dy / dx
         elif a_right_vaccum:
             self.A[ic+1, ic] = - Dcell[i, j] *dy/ 2*dx
             sum_aij -= Dcell[i, j] *dy/ dx
@@ -94,4 +115,3 @@ class Matrix_constructor:
         a_left_vaccum, a_bottom_vaccum = bound_type_l[1], bound_type_l[2]
 
         return a_left_vaccum, a_right_vaccum, a_top_vaccum, a_bottom_vaccum
-    

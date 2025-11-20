@@ -71,7 +71,7 @@ if __name__ == "__main__":
         sigma_a=0.01,
         mu_0=0.0,
         sigma_f=0.0,
-        s=0.0,
+        s=1,
         bounds=(2.0, 3.0),
         bound_type=(0, 0, 0, 0)
     )
@@ -102,3 +102,7 @@ if __name__ == "__main__":
     print(mesh.Dcells)
     print("\nAbsorption Coefficient Matrix (Sigma_a_cells):")
     print(mesh.Sigma_acells)
+    print("\nSource Term Matrix (source_cells):")
+    print(mesh.source_cells)
+    print("\nInterfaces:")
+    print(mesh.interfaces_x)

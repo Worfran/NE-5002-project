@@ -14,8 +14,8 @@ def test_small_mesh_with_two_materials():
         sigma_a=0.01,
         mu_0=0.0,
         sigma_f=0.0,
-        s=0.0,
-        bounds=(2.0, 1.0),  # Material 1 occupies 2x3 region
+        s=1.0,
+        bounds=(2.0, 3.0),  # Material 1 occupies 2x3 region
         bound_type=(0, 0, 0, 0)
     )
 
@@ -26,15 +26,15 @@ def test_small_mesh_with_two_materials():
         mu_0=0.0,
         sigma_f=0.0,
         s=0.0,
-        bounds=(2.0, 1.0),  # Material 2 occupies 2x3 region
+        bounds=(2.0, 3.0),  # Material 2 occupies 2x3 region
         bound_type=(0, 0, 0, 0)
     )
 
     materials = [material1, material2]
 
     # Create Mesh_constructor instance
-    ncells_x = 4  # 4 cells in x direction
-    ncells_y = 3  # 3 cells in y direction
+    ncells_x = 8  # 4 cells in x direction
+    ncells_y = 8  # 3 cells in y direction
     mesh = Mesh_constructor(ncells_x, ncells_y, materials)
 
     # Compute extrapolated boundaries
@@ -49,14 +49,17 @@ def test_small_mesh_with_two_materials():
 
     # Create material matrix
     material_matrix = mesh.create_material_matrices()
-    D_cells, Sigma_a_cells = mesh.Dcells, mesh.Sigma_acells
+    D_cells, Sigma_a_cells, source_cells = mesh.Dcells, mesh.Sigma_acells, mesh.source_cells
 
     # Create Matrix_constructor instance
-    matrix_constructor = Matrix_constructor(ncells_x, ncells_y, D_cells, Sigma_a_cells, dx, dy, materials)
+    matrix_constructor = Matrix_constructor(ncells_x, ncells_y, D_cells, Sigma_a_cells, source_cells, dx, dy, materials, mesh.interfaces_x)
 
     # Print the matrix A
     print("Matrix A:")
     print(matrix_constructor.A)
+
+    print("Source term b:")
+    print(matrix_constructor.b)
 
     # Write the matrix A to a txt file
     with open("matrix_A.txt", "w") as f:

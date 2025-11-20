@@ -109,6 +109,8 @@ class Mesh_constructor:
     def create_material_matrices(self):
         self.Dcells = np.zeros((self.ncells_y, self.ncells_x))
         self.Sigma_acells = np.zeros((self.ncells_y, self.ncells_x))
+        self.source_cells = np.zeros((self.ncells_y, self.ncells_x))
+
         self.compute_cell_sizes()
         current_x = 0
         n, m = self.ncells_x, self.ncells_y
@@ -125,10 +127,24 @@ class Mesh_constructor:
                 for j in range(current_x, current_x + material_cells_x):
                     self.Dcells[i, j] = material.diffusion_coefficient()
                     self.Sigma_acells[i, j] = material.get_sigma_a()
+                    self.source_cells[i, j] = material.get_s()
                 
             current_x += material_cells_x  # Move to the next position in x-d
+            self.mark_interfaces()
 
+    def mark_interfaces(self):
+        self.interfaces_x = []
 
+        current_x = 0
+        for material in self.materials:
+            material_cells_x = int(material.get_bounds()[0] // self.dx)  # Number of cells the material spans in x-direction
+            next_x = current_x + material_cells_x
+
+            # Mark the interface at the boundary between this material and the next
+            if next_x < self.ncells_x:  # Ensure we don't go out of bounds
+                self.interfaces_x.append(next_x)
+
+            current_x = next_x
 
 
     
