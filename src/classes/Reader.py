@@ -27,6 +27,7 @@ class DocumentReader:
             bound_type = self._extract_tuple(block, 'bound_type', expected_length=4, is_bool=True)
 
             material = Material(name, sigma_s, sigma_a, mu_0, sigma_f, s, bounds, bound_type)
+            print(f"Parsed material: {material}")
             self.materials.append(material)
 
     def _extract_parameter(self, block: str, key: str, default=None):

@@ -1,19 +1,19 @@
 Material 1:
   name: Water
-  sigma_s: 0.21
+  sigma_s: 0.323333
   sigma_a: 0.01
   mu_0: 0.0
   sigma_f: 0.0
   s: 1.0
-  bounds: (10.0, 10.0)
-  bound_type: (1, 1, 0, 0)
+  bounds: (2.0, 3.0)
+  bound_type: (0, 0, 0, 0)
 
 Material 2:
   name: Fuel
-  sigma_s: 0.5
+  sigma_s: 0.6466666
   sigma_a: 0.02
-  mu_0: 0.1
-  sigma_f: 0.05
+  mu_0: 0.0
+  sigma_f: 0.00
   s: 0.0
-  bounds: (20.0, 10.0)
+  bounds: (2.0, 3.0)
   bound_type: (0, 0, 0, 0)

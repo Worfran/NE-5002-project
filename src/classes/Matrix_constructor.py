@@ -25,9 +25,9 @@ class Matrix_constructor:
             for j in range(n): #n
                 l = (i*n + j)
                 self.b[l] = self.source_cells[i, j]
-                if j in self.interfaces_x and self.source_cells[i, j-1] != self.source_cells[i, j]:
+                if j < n-1 and j in self.interfaces_x and self.source_cells[i, j-1] != self.source_cells[i, j]:
                     self.b[l] = (self.source_cells[i, j] + self.source_cells[i, j-1])/2
-                elif j in self.interfaces_x and self.source_cells[i, j+1] != self.source_cells[i, j]:
+                elif j < n-1 and j in self.interfaces_x and self.source_cells[i, j+1] != self.source_cells[i, j]:
                     self.b[l] = (self.source_cells[i, j] + self.source_cells[i, j+1])/2
 
     def construct_matrix(self):

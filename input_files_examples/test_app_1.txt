@@ -1,19 +1,19 @@
 Material 1:
-    name: Material1
-    sigma_s: 0.3233333333333333  
-    sigma_a: 0.01
-    mu_0: 0.0
-    sigma_f: 0.0
-    s: 1.0
-    bounds: (2.0, 3.0)
-    bound_type: (0, 0, 0, 0)
+ name: Material1
+ sigma_s: 0.3233333333333333  
+ sigma_a: 0.01
+ mu_0: 0.0
+ sigma_f: 0.0
+ s: 1.0
+ bounds: (2.0, 3.0)
+ bound_type: (0, 0, 0, 0)
 
 Material 2:
-    name: Material2
-    sigma_s: 0.6466666666666666
-    sigma_a: 0.02
-    mu_0: 0.0
-    sigma_f: 0.0
-    s: 0.0
-    bounds: (2.0, 3.0)
-    bound_type: (0, 0, 0, 0)
+ name: Material2
+ sigma_s: 0.6466666666666666
+ sigma_a: 0.02
+ mu_0: 0.0
+ sigma_f: 0.0
+ s: 0.0
+ bounds: (2.0, 3.0)
+ bound_type: (0, 0, 0, 0)

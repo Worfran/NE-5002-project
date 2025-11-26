@@ -3,6 +3,7 @@ from src.classes.Mesh_constructor import Mesh_constructor
 from src.classes.Matrix_constructor import Matrix_constructor
 from src.classes.Solvers import Solvers
 from src.classes.Reader import DocumentReader
+from src.classes.Plotter import Plotter
 
 class ProblemModel:
     def __init__(self):
@@ -70,3 +71,16 @@ class ProblemModel:
             return self.solver.sor(omega=omega)
         else:
             raise ValueError(f"Unknown method: {method}")
+    
+    def plot_solution(self, solution):
+        if not self.mesh:
+            raise ValueError("Mesh must be created before plotting the solution.")
+        plotter = Plotter()
+        plotter.plot_heatmap(
+            solution=solution,
+            n=self.mesh.ncells_y,
+            m=self.mesh.ncells_x,
+            title="Solution Heatmap"
+        )
+    
+    

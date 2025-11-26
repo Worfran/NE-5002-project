@@ -145,6 +145,4 @@ class Mesh_constructor:
                 self.interfaces_x.append(next_x)
 
             current_x = next_x
-
-
-    
+        print(f"Interfaces at x-indices: {self.interfaces_x}")

@@ -34,8 +34,8 @@ def test_small_mesh_with_two_materials():
     materials = [material1, material2]
 
     # Create Mesh_constructor instance
-    ncells_x = 8  # 4 cells in x direction
-    ncells_y = 8  # 3 cells in y direction
+    ncells_x = 55  # 4 cells in x direction
+    ncells_y = 55 # 3 cells in y direction
     mesh = Mesh_constructor(ncells_x, ncells_y, materials)
 
     # Compute extrapolated boundaries
@@ -63,7 +63,7 @@ def test_small_mesh_with_two_materials():
     print(matrix_constructor.b)
 
     solver = Solvers(matrix_constructor.A, matrix_constructor.b)
-    solution = solver.sor()
+    solution = solver.jacobi()
     print("Solution:")
     print(solution)
 
