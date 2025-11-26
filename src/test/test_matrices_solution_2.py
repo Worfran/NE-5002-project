@@ -15,7 +15,7 @@ def test_small_mesh_with_two_materials():
         sigma_a=0.01,
         mu_0=0.0,
         sigma_f=0.0,
-        s=1.0,
+        s=0.0,
         bounds=(2.0, 3.0),  # Material 1 occupies 2x3 region
         bound_type=(0, 0, 0, 0)
     )
@@ -26,12 +26,23 @@ def test_small_mesh_with_two_materials():
         sigma_a=0.02,
         mu_0=0.0,
         sigma_f=0.0,
+        s=1.0,
+        bounds=(2.0, 3.0),  # Material 2 occupies 2x3 region
+        bound_type=(0, 0, 0, 0)
+    )
+
+    material3 = Material(
+        name="Material3",
+        sigma_s=sigma_tr_material2 - 0.02,  # sigma_s = sigma_tr - sigma_a (assuming sigma_a = 0.02)
+        sigma_a=0.02,
+        mu_0=0.0,
+        sigma_f=0.0,
         s=0.0,
         bounds=(2.0, 3.0),  # Material 2 occupies 2x3 region
         bound_type=(0, 0, 0, 0)
     )
 
-    materials = [material1, material2]
+    materials = [material1, material2, material3]
 
     # Create Mesh_constructor instance
     ncells_x = 55  # 4 cells in x direction
@@ -55,17 +66,27 @@ def test_small_mesh_with_two_materials():
     # Create Matrix_constructor instance
     matrix_constructor = Matrix_constructor(ncells_x, ncells_y, D_cells, Sigma_a_cells, source_cells, dx, dy, materials, mesh.interfaces_x)
 
+    # Save the matrix A to a text file
+    np.savetxt("matrix_A.txt", matrix_constructor.A, fmt="%.6f")
+
+    # Save the source term b to a text file
+    np.savetxt("vector_b.txt", matrix_constructor.b, fmt="%.6f")
+
+
     # Print the matrix A
     print("Matrix A:")
     print(matrix_constructor.A)
 
+    # Print the source term b
     print("Source term b:")
     print(matrix_constructor.b)
 
+    # Solve the system using Jacobi method
     solver = Solvers(matrix_constructor.A, matrix_constructor.b)
     solution = solver.jacobi()
     print("Solution:")
     print(solution)
+
 
 if __name__ == "__main__":
     test_small_mesh_with_two_materials()

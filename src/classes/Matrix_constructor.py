@@ -47,7 +47,7 @@ class Matrix_constructor:
         a_left, a_right, a_top, a_bottom = self.check_neighbors(i, j)
         a_left_vaccum, a_right_vaccum, a_top_vaccum, a_bottom_vaccum = self.check_boundary(i, j)
 
-        ic = (m-i)*n - (m-j) - 1 # Index of the diagonal element in A
+        ic = (m-i)*n - (n-j) - 1 # Index of the diagonal element in A
 
 
         if a_left and (j in self.interfaces_x):

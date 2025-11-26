@@ -5,7 +5,7 @@ Material 1:
   mu_0: 0.0
   sigma_f: 0.0
   s: 1.0
-  bounds: (2.0, 3.0)
+  bounds: (5.0, 3.0)
   bound_type: (0, 0, 0, 0)
 
 Material 2:
@@ -14,6 +14,16 @@ Material 2:
   sigma_a: 0.02
   mu_0: 0.0
   sigma_f: 0.00
-  s: 0.0
+  s: 1.0
   bounds: (2.0, 3.0)
+  bound_type: (0, 0, 0, 0)
+
+Material 3:
+  name: Water2
+  sigma_s: 0.323333
+  sigma_a: 0.01
+  mu_0: 0.0
+  sigma_f: 0.0
+  s: 0.0
+  bounds: (5.0, 3.0)
   bound_type: (0, 0, 0, 0)

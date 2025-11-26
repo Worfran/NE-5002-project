@@ -117,6 +117,7 @@ class Mesh_constructor:
 
         for material in self.materials:
             W, H = material.get_bounds()  # Get the width and height of the material
+            print(material.get_name())
 
 
             # Fill the grid with the material properties

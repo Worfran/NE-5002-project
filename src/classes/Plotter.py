@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -24,13 +25,12 @@ class Plotter:
         """
         # Ensure the solution is a numpy array
         solution = np.asarray(solution)
+        solution_matrix = self.vector_to_matrix(solution, n, m)
 
         # Check if the solution size matches the specified dimensions
         if solution.size != n * m:
             raise ValueError("Solution size does not match the specified dimensions (n x m).")
 
-        # Reshape the solution into an n x m matrix
-        solution_matrix = solution.reshape((n, m))
 
         # Plot the heatmap
         plt.figure(figsize=(8, 6))
@@ -39,4 +39,34 @@ class Plotter:
         plt.title(title)
         plt.xlabel("Column Index")
         plt.ylabel("Row Index")
+
+        # Save files before showing the plot
+        timestamp = int(time.time())
+        plt.savefig(f"Output/images/solution_heatmap_timestamp_{timestamp}.svg", format='svg')
+        np.savetxt(f"Output/data/solution_data_timestamp_{timestamp}.txt", solution_matrix)
+
+        # Show the plot
         plt.show()
+    
+    def vector_to_matrix(self, vector, n, m):
+        """
+        Converts a 1D solution vector into a 2D matrix.
+
+        Parameters:
+            vector (ndarray): The 1D solution vector.
+            n (int): Number of rows in the resulting matrix.
+            m (int): Number of columns in the resulting matrix.
+
+        Returns:
+            ndarray: The reshaped 2D matrix.
+        """
+        solution_matrix = np.zeros((n, m))
+        vector = np.asarray(vector)
+        if vector.size != n * m:
+            raise ValueError("Vector size does not match the specified dimensions (n x m).")
+        for i in range(n):
+            start = i * m
+            end = start + m
+            solution_matrix[i, :] = vector[start:end]
+
+        return solution_matrix
