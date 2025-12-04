@@ -141,9 +141,6 @@ class Matrix_constructor:
 
         Sigma_a_cell_ij = Sigma_a_cell[i, j]
         self.A[ic, ic] = Sigma_a_cell_ij + sum_aij
-        if ic == 4:  # or any of the indices where row was zero
-            print("DEBUG dead cell (i,j):", i, j,
-                "D=", D_ij, "Sigma=", Sigma_a_cell_ij)
 
 
     def check_neighbors(self, i, j):

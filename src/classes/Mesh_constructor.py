@@ -125,7 +125,6 @@ class Mesh_constructor:
                 # Last material: take everything that remains
                 material_cells_x = n - current_x
 
-            # Safety: don’t go out of bounds
             end_x = min(current_x + material_cells_x, n)
 
             for i in range(m):
@@ -150,7 +149,7 @@ class Mesh_constructor:
 
             material_cells_x = int(round(W / self.dx))
             next_x = current_x + material_cells_x
-            next_x = min(next_x, n)  # clamp
+            next_x = min(next_x, n)  
 
             if 0 < next_x < n:
                 self.interfaces_x.append(next_x)

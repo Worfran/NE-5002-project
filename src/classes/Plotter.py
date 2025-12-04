@@ -5,15 +5,6 @@ import matplotlib.pyplot as plt
 class Plotter:
     """
     Plot the solution of a linear system as a heatmap.
-
-    Usage:
-        p = Plotter()
-        p.plot_heatmap(
-            solution, n, m,
-            dx=dx, dy=dy,
-            title="Scalar flux",
-            flux_units="n/cm$^2$/s"
-        )
     """
 
     def __init__(self):
@@ -51,7 +42,7 @@ class Plotter:
         ax.set_yticks(np.arange(n))
 
         # --- Colorbar with padding so it doesn't overlap ---
-        cbar = fig.colorbar(im, ax=ax, pad=0.08)  # <<< space added here
+        cbar = fig.colorbar(im, ax=ax, pad=0.08) 
         if flux_units:
             cbar.set_label(f"Flux [{flux_units}]")
         else:
