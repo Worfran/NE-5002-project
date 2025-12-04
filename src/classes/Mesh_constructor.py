@@ -195,8 +195,6 @@ class Mesh_constructor:
                 self.interfaces_x.append(next_x)
 
             current_x = next_x
-
-        print(f"Interfaces at x-indices: {self.interfaces_x}")
     
     def _apply_interface_cell_averaging(self):
         m, n = self.ncells_y, self.ncells_x

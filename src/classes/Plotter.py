@@ -65,12 +65,12 @@ class Plotter:
         # Save
         timestamp = int(time.time())
         fig.savefig(
-            f"Output/images/solution_heatmap_timestamp_{timestamp}.svg",
+            f"output/images/solution_heatmap_timestamp_{timestamp}.svg",
             format='svg',
             bbox_inches='tight'
         )
         np.savetxt(
-            f"Output/data/solution_data_timestamp_{timestamp}.txt",
+            f"output/data/solution_data_timestamp_{timestamp}.txt",
             solution_matrix
         )
 

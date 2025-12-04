@@ -47,6 +47,4 @@ class ProblemView:
         print(f"Error: {error_message}")
 
     def display_solution(self, solution):
-        print("Solution:")
-        print(solution)
         print("Displaying solution plot...")

@@ -57,8 +57,8 @@ class ProblemModel:
             self.materials,
             self.mesh.interfaces_x
         )
-        np.savetxt(f"Output/data/matrix_A.txt-timestamp_{int(time.time())}", self.matrix_constructor.A)
-        np.savetxt(f"Output/data/vector_b.txt-timestamp_{int(time.time())}", self.matrix_constructor.b)
+        np.savetxt(f"output/data_computed/matrix_A-timestamp_{int(time.time())}.txt", self.matrix_constructor.A)
+        np.savetxt(f"output/data_computed/vector_b-timestamp_{int(time.time())}.txt", self.matrix_constructor.b)
 
 
     def solve(self, method="sor", omega=1.25, max_iter=1000):

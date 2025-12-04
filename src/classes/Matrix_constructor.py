@@ -207,5 +207,6 @@ class Matrix_constructor:
         """
         ic = self.ncells_x * (self.ncells_y - (i + 1)) + j
         self.A[ic, :] = 0.0
+        self.A[:, ic] = 0.0
         self.A[ic, ic] = 1.0
         self.b[ic] = 0.0
