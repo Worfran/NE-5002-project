@@ -35,16 +35,6 @@ class ProblemController:
             self.create_problem()
         except Exception as e:
             self.view.display_error(str(e))
-
-    def create_problem(self):
-        try:
-            ncells_x, ncells_y = self.view.get_mesh_dimensions()
-            self.model.create_mesh(ncells_x, ncells_y)
-            self.model.create_matrix()
-            solution = self.model.solve()
-            self.view.display_solution(solution)
-        except Exception as e:
-            self.view.display_error(str(e))
     
     def create_problem(self):
         try:
@@ -53,7 +43,7 @@ class ProblemController:
             self.model.create_matrix()
             solution = self.model.solve()
             self.view.display_solution(solution)
-            self.model.plot_solution(solution)  # Plot the solution
+            self.model.plot_solution(solution) 
         except Exception as e:
             self.view.display_error(str(e))
 

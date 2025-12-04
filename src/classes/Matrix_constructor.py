@@ -23,7 +23,7 @@ class Matrix_constructor:
         m, n = self.ncells_y, self.ncells_x
         for i in range(m): #m
             for j in range(n): #n
-                l = (i*n + j)
+                l = n*(m-(i+1)) + j
                 self.b[l] = self.source_cells[i, j]
                 if j < n-1 and j in self.interfaces_x and self.source_cells[i, j-1] != self.source_cells[i, j]:
                     self.b[l] = (self.source_cells[i, j] + self.source_cells[i, j-1])/2
@@ -31,67 +31,120 @@ class Matrix_constructor:
                     self.b[l] = (self.source_cells[i, j] + self.source_cells[i, j+1])/2
 
     def construct_matrix(self):
-        for i in range(self.Dcell.shape[0]):
-            for j in range(self.Dcell.shape[1]):
+        m, n = self.ncells_y, self.ncells_x
+        for i in range(m):
+            for j in range(n):
                 self.entries_aij(i, j, self.Dcell, self.Sigma_a_cell)
 
     def entries_aij(self, i, j, Dcell, Sigma_a_cell):
-        a_ij = 0
-
-        sum_aij = 0
         dx = self.dx
         dy = self.dy
-        n = self.ncells_x
-        m = self.ncells_y
+        n  = self.ncells_x
+        m  = self.ncells_y
 
-        a_left, a_right, a_top, a_bottom = self.check_neighbors(i, j)
-        a_left_vaccum, a_right_vaccum, a_top_vaccum, a_bottom_vaccum = self.check_boundary(i, j)
+        ic = n * (m - (i + 1)) + j  # global index
 
-        ic = (m-i)*n - (n-j) - 1 # Index of the diagonal element in A
+        has_left, has_right, has_top, has_bottom = self.check_neighbors(i, j)
+        left_vac, right_vac, top_vac, bottom_vac = self.check_boundary(i, j)
+
+        D_ij = Dcell[i, j]
+        sum_aij = 0.0
+
+        # ---------- LEFT FACE ----------
+        if has_left:
+            # Interior face
+            is_interface = (j in self.interfaces_x)
+            D_nb = Dcell[i, j - 1]
+            if is_interface:
+                D_face = 0.5 * (D_ij + D_nb)
+            else:
+                D_face = D_ij
+            coeff = D_face * dy / dx
+            self.A[ic, ic - 1] -= coeff
+            sum_aij += coeff
+        else:
+            # Boundary face at left edge
+            if left_vac:
+
+                D_face = D_ij
+                coeff = D_face * dy / dx
+                sum_aij += coeff
+            else:
+ 
+                D_face = D_ij
+                coeff = D_face * dy / (2.0 * dx)
+                sum_aij += coeff
+
+        # ---------- RIGHT FACE ----------
+        if has_right:
+            # Interior face
+            is_interface = (j in self.interfaces_x)
+            D_nb = Dcell[i, j + 1]
+            if is_interface:
+                D_face = 0.5 * (D_ij + D_nb)
+            else:
+                D_face = D_ij
+            coeff = D_face * dy / dx
+            self.A[ic, ic + 1] -= coeff
+            sum_aij += coeff
+        else:
+            # Boundary face at right edge
+            if right_vac:
+                # Vacuum BC
+                D_face = D_ij
+                coeff = D_face * dy / dx
+                sum_aij += coeff
+            else:
+                # Reflective BC
+                D_face = D_ij
+                coeff = D_face * dy / (2.0 * dx)
+                sum_aij += coeff
+
+        # ---------- TOP FACE (i-1) ----------
+        if has_top:
+            # Interior face
+            D_nb = Dcell[i - 1, j]
+            D_face = 0.5 * (D_ij + D_nb)  
+            coeff = D_face * dx / dy
+            self.A[ic, ic + n] -= coeff
+            sum_aij += coeff
+        else:
+            # Boundary at top edge
+            if top_vac:
+                D_face = D_ij
+                coeff = D_face * dx / dy
+                sum_aij += coeff
+            else:
+                D_face = D_ij
+                coeff = D_face * dx / (2.0 * dy)
+                sum_aij += coeff
+
+        # ---------- BOTTOM FACE (i+1) ----------
+        if has_bottom:
+            # Interior face
+            D_nb = Dcell[i + 1, j]
+            D_face = 0.5 * (D_ij + D_nb)
+            coeff = D_face * dx / dy
+            self.A[ic, ic - n] -= coeff
+            sum_aij += coeff
+        else:
+            # Boundary at bottom edge
+            if bottom_vac:
+                D_face = D_ij
+                coeff = D_face * dx / dy
+                sum_aij += coeff
+            else:
+                D_face = D_ij
+                coeff = D_face * dx / (2.0 * dy)
+                sum_aij += coeff
 
 
-        if a_left and (j in self.interfaces_x):
-            sum_aij -= (Dcell[i, j]*dy + Dcell[i, j-1]*dy) / 2*dx
-            self.A[ic-1, ic] = - (Dcell[i, j]*dy + Dcell[i, j-1]*dy) / 2*dx
-        elif a_left:
-            sum_aij -= Dcell[i, j]*dy / dx
-            self.A[ic-1, ic] = - Dcell[i, j]*dy / dx
-        elif a_left_vaccum:
-            sum_aij -= Dcell[i, j]*dy / dx
-        elif not a_left and not a_left_vaccum:
-            sum_aij -= Dcell[i, j]*dy / 2*dx
+        Sigma_a_cell_ij = Sigma_a_cell[i, j]
+        self.A[ic, ic] = Sigma_a_cell_ij + sum_aij
+        if ic == 4:  # or any of the indices where row was zero
+            print("DEBUG dead cell (i,j):", i, j,
+                "D=", D_ij, "Sigma=", Sigma_a_cell_ij)
 
-        if a_right and (j in self.interfaces_x):
-            self.A[ic+1, ic] = - (Dcell[i, j]*dy + Dcell[i, j+1]*dy) / 2*dx
-            sum_aij -= (Dcell[i, j]*dy + Dcell[i, j+1]*dy) / 2*dx
-        elif a_right:
-            self.A[ic+1, ic] = - Dcell[i, j]*dy / dx
-            sum_aij -= Dcell[i, j]*dy / dx
-        elif a_right_vaccum:
-            self.A[ic+1, ic] = - Dcell[i, j] *dy/ 2*dx
-            sum_aij -= Dcell[i, j] *dy/ dx
-        elif not a_right and not a_right_vaccum:
-            sum_aij -= Dcell[i, j] *dy/ 2*dx
-
-        if a_top:
-            self.A[ic, ic+n] = - (Dcell[i, j]*dx + Dcell[i-1, j]*dx) / 2*dy
-            sum_aij -= (Dcell[i, j]*dx + Dcell[i-1, j]*dx) / 2*dy
-        elif a_top_vaccum:
-            sum_aij -= Dcell[i, j] *dx/ dy
-        elif not a_top and not a_top_vaccum:
-            sum_aij -= Dcell[i, j] *dx/ 2*dy
-
-        if a_bottom:
-            self.A[ic, ic-n] = - (Dcell[i, j]*dx + Dcell[i+1, j]*dx) / 2*dy
-            sum_aij -= (Dcell[i, j]*dx + Dcell[i+1, j]*dx) / 2*dy
-        elif a_bottom_vaccum:
-            sum_aij -= Dcell[i, j] *dx/ dy
-        elif not a_bottom and not a_bottom_vaccum:
-            sum_aij -= Dcell[i, j] *dy/ 2*dy
-
-        a_ij = Sigma_a_cell[i, j] - sum_aij
-
-        self.A[ic, ic] = a_ij
 
     def check_neighbors(self, i, j):
         n = self.ncells_x
@@ -111,7 +164,7 @@ class Matrix_constructor:
         material_l = self.materials[-1]
         bound_type_r = material_r.get_bound_type()
         bound_type_l = material_l.get_bound_type()
-        a_right_vaccum, a_top_vaccum = bound_type_r[0], bound_type_r[3]
-        a_left_vaccum, a_bottom_vaccum = bound_type_l[1], bound_type_l[2]
+        a_right_vaccum, a_top_vaccum = bound_type_r[1], bound_type_r[3]
+        a_left_vaccum, a_bottom_vaccum = bound_type_l[0], bound_type_l[2]
 
         return a_left_vaccum, a_right_vaccum, a_top_vaccum, a_bottom_vaccum

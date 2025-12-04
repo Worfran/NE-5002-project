@@ -1,0 +1,29 @@
+Material 1:
+  name: Water
+  sigma_s: 0.99
+  sigma_a: 0.01
+  mu_0: 0.0
+  sigma_f: 0.0
+  s: 0.0
+  bounds: (7, 20.0)
+  bound_type: (1, 1, 1, 1)
+
+Material 2:
+  name: Fuel
+  sigma_s: 0.8
+  sigma_a: 0.2
+  mu_0: 0.0
+  sigma_f: 0.00
+  s: 1.0
+  bounds: (6, 20.0)
+  bound_type: (1, 1, 1, 1)
+
+Material 3:
+  name: Water2
+  sigma_s: 0.99
+  sigma_a: 0.01
+  mu_0: 0.0
+  sigma_f: 0.0
+  s: 0.0
+  bounds: (7, 20.0)
+  bound_type: (1, 1, 1, 1)

@@ -4,53 +4,89 @@ import matplotlib.pyplot as plt
 
 class Plotter:
     """
-    A class to plot the solution of a linear system as a heatmap.
+    Plot the solution of a linear system as a heatmap.
+
     Usage:
         p = Plotter()
-        p.plot_heatmap(solution, n, m, title="Heatmap of Solution")
+        p.plot_heatmap(
+            solution, n, m,
+            dx=dx, dy=dy,
+            title="Scalar flux",
+            flux_units="n/cm$^2$/s"
+        )
     """
 
     def __init__(self):
         pass
 
-    def plot_heatmap(self, solution, n, m, title="Heatmap"):
-        """
-        Plots a heatmap of the solution vector.
+    def plot_heatmap(self, solution, n, m,
+                    dx=1.0, dy=1.0,
+                    title="Heatmap",
+                    flux_units=""):
 
-        Parameters:
-            solution (ndarray): The solution vector to be reshaped into a matrix.
-            n (int): Number of rows in the reshaped matrix.
-            m (int): Number of columns in the reshaped matrix.
-            title (str): Title of the heatmap.
-        """
-        # Ensure the solution is a numpy array
         solution = np.asarray(solution)
+        if solution.size != n * m:
+            raise ValueError(
+                f"Solution size ({solution.size}) does not match n*m = {n*m}."
+            )
+
         solution_matrix = self.vector_to_matrix(solution, n, m)
 
-        # Check if the solution size matches the specified dimensions
-        if solution.size != n * m:
-            raise ValueError("Solution size does not match the specified dimensions (n x m).")
+        # Use constrained_layout to avoid overlaps
+        fig, ax = plt.subplots(figsize=(8, 6), constrained_layout=True)
 
+        # Heatmap
+        im = ax.imshow(
+            solution_matrix,
+            cmap='viridis',
+            origin='lower',
+            extent=[-0.5, m - 0.5, -0.5, n - 0.5],
+            aspect='auto'
+        )
 
-        # Plot the heatmap
-        plt.figure(figsize=(8, 6))
-        plt.imshow(solution_matrix, cmap='viridis', origin='upper')
-        plt.colorbar(label='Value')
-        plt.title(title)
-        plt.xlabel("Column Index")
-        plt.ylabel("Row Index")
+        ax.set_xlabel("Cell index (x)")
+        ax.set_ylabel("Cell index (y)")
+        ax.set_title(title)
+        ax.set_xticks(np.arange(m))
+        ax.set_yticks(np.arange(n))
 
-        # Save files before showing the plot
+        # --- Colorbar with padding so it doesn't overlap ---
+        cbar = fig.colorbar(im, ax=ax, pad=0.08)  # <<< space added here
+        if flux_units:
+            cbar.set_label(f"Flux [{flux_units}]")
+        else:
+            cbar.set_label("Flux")
+
+        # --- Secondary axes in physical coordinates ---
+        def idx_to_xcm(j): return (j + 0.5) * dx
+        def xcm_to_idx(x): return x / dx - 0.5
+        def idx_to_ycm(i): return (i + 0.5) * dy
+        def ycm_to_idx(y): return y / dy - 0.5
+
+        secax_x = ax.secondary_xaxis('top', functions=(idx_to_xcm, xcm_to_idx))
+        secax_y = ax.secondary_yaxis('right', functions=(idx_to_ycm, ycm_to_idx))
+
+        secax_x.set_xlabel("x (cm)", labelpad=5)
+        secax_y.set_ylabel("y (cm)", labelpad=5)
+
+        # Save
         timestamp = int(time.time())
-        plt.savefig(f"Output/images/solution_heatmap_timestamp_{timestamp}.svg", format='svg')
-        np.savetxt(f"Output/data/solution_data_timestamp_{timestamp}.txt", solution_matrix)
+        fig.savefig(
+            f"Output/images/solution_heatmap_timestamp_{timestamp}.svg",
+            format='svg',
+            bbox_inches='tight'
+        )
+        np.savetxt(
+            f"Output/data/solution_data_timestamp_{timestamp}.txt",
+            solution_matrix
+        )
 
-        # Show the plot
         plt.show()
-    
+
+
     def vector_to_matrix(self, vector, n, m):
         """
-        Converts a 1D solution vector into a 2D matrix.
+        Converts a 1D solution vector into a 2D matrix (row-major).
 
         Parameters:
             vector (ndarray): The 1D solution vector.
@@ -58,15 +94,16 @@ class Plotter:
             m (int): Number of columns in the resulting matrix.
 
         Returns:
-            ndarray: The reshaped 2D matrix.
+            ndarray: The reshaped 2D matrix of shape (n, m).
         """
-        solution_matrix = np.zeros((n, m))
         vector = np.asarray(vector)
         if vector.size != n * m:
-            raise ValueError("Vector size does not match the specified dimensions (n x m).")
+            raise ValueError(
+                f"Vector size ({vector.size}) does not match n*m = {n*m}."
+            )
+        solution_matrix = np.zeros((n, m))
         for i in range(n):
             start = i * m
             end = start + m
             solution_matrix[i, :] = vector[start:end]
-
         return solution_matrix

@@ -4,6 +4,7 @@ from src.classes.Matrix_constructor import Matrix_constructor
 from src.classes.Solvers import Solvers
 from src.classes.Reader import DocumentReader
 from src.classes.Plotter import Plotter
+import numpy as np
 
 class ProblemModel:
     def __init__(self):
@@ -55,6 +56,8 @@ class ProblemModel:
             self.materials,
             self.mesh.interfaces_x
         )
+        np.savetxt("matrix_A.txt", self.matrix_constructor.A)
+
 
     def solve(self, method="sor", omega=1.25, max_iter=1000):
         if not self.matrix_constructor:
@@ -77,10 +80,14 @@ class ProblemModel:
             raise ValueError("Mesh must be created before plotting the solution.")
         plotter = Plotter()
         plotter.plot_heatmap(
-            solution=solution,
+            solution,
             n=self.mesh.ncells_y,
             m=self.mesh.ncells_x,
-            title="Solution Heatmap"
+            dx=self.mesh.dx,
+            dy=self.mesh.dy,
+            title="Scalar flux",
+            flux_units="n/cm$^2$/s"
         )
+
     
     

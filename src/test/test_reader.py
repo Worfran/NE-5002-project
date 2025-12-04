@@ -12,23 +12,23 @@ def test_document_reader_with_test_1():
     assert len(materials) == 2, "Expected 2 materials to be parsed"
     material1 = materials[0]
     assert material1.get_name() == "Water"
-    assert material1.get_sigma_s() == 0.21
-    assert material1.get_sigma_a() == 0.01
+    assert material1.get_sigma_s() == 0.90
+    assert material1.get_sigma_a() == 0.1
     assert material1.get_mu_0() == 0.0
     assert material1.get_sigma_f() == 0.0
-    assert material1.get_s() == 1.0
-    assert material1.get_bounds() == (10.0, 10.0)
-    assert material1.get_bound_type() == (True, True, False, False)
+    assert material1.get_s() == 0.0
+    assert material1.get_bounds() == (10.0, 3.0)
+    assert material1.get_bound_type() == (False, False, False, False)
 
     # Assertions for Material 2
     material2 = materials[1]
     assert material2.get_name() == "Fuel"
-    assert material2.get_sigma_s() == 0.5
+    assert material2.get_sigma_s() == 0.98
     assert material2.get_sigma_a() == 0.02
-    assert material2.get_mu_0() == 0.1
-    assert material2.get_sigma_f() == 0.05
-    assert material2.get_s() == 0.0
-    assert material2.get_bounds() == (20.0, 10.0)
+    assert material2.get_mu_0() == 0.0
+    assert material2.get_sigma_f() == 0.00
+    assert material2.get_s() == 1.0
+    assert material2.get_bounds() == (2.0, 3.0)
     assert material2.get_bound_type() == (False, False, False, False)
 
     print("Test 1 passed!")

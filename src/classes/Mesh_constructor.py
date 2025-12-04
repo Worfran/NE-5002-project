@@ -115,35 +115,47 @@ class Mesh_constructor:
         current_x = 0
         n, m = self.ncells_x, self.ncells_y
 
-        for material in self.materials:
-            W, H = material.get_bounds()  # Get the width and height of the material
-            print(material.get_name())
+        for k, material in enumerate(self.materials):
+            W, H = material.get_bounds()
 
+            # For all but the last material, compute from width
+            if k < len(self.materials) - 1:
+                material_cells_x = int(round(W / self.dx))
+            else:
+                # Last material: take everything that remains
+                material_cells_x = n - current_x
 
-            # Fill the grid with the material properties
-            for i in range(0, m):                
-                material_cells_x = int(W // self.dx)  # Number of cells the material spans in x-direction
-                
-                # Determine how many cells in x-d
-                for j in range(current_x, current_x + material_cells_x):
+            # Safety: don’t go out of bounds
+            end_x = min(current_x + material_cells_x, n)
+
+            for i in range(m):
+                for j in range(current_x, end_x):
                     self.Dcells[i, j] = material.diffusion_coefficient()
                     self.Sigma_acells[i, j] = material.get_sigma_a()
                     self.source_cells[i, j] = material.get_s()
-                
-            current_x += material_cells_x  # Move to the next position in x-d
-            self.mark_interfaces()
+
+            current_x = end_x
+
+        self.mark_interfaces()
+
+
 
     def mark_interfaces(self):
         self.interfaces_x = []
-
         current_x = 0
-        for material in self.materials:
-            material_cells_x = int(material.get_bounds()[0] // self.dx)  # Number of cells the material spans in x-direction
-            next_x = current_x + material_cells_x
+        n = self.ncells_x
 
-            # Mark the interface at the boundary between this material and the next
-            if next_x < self.ncells_x:  # Ensure we don't go out of bounds
+        for k, material in enumerate(self.materials[:-1]):
+            W, H = material.get_bounds()
+
+            material_cells_x = int(round(W / self.dx))
+            next_x = current_x + material_cells_x
+            next_x = min(next_x, n)  # clamp
+
+            if 0 < next_x < n:
                 self.interfaces_x.append(next_x)
 
             current_x = next_x
+
         print(f"Interfaces at x-indices: {self.interfaces_x}")
+

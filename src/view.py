@@ -33,7 +33,7 @@ class ProblemView:
                 "bounds": bounds,
                 "bound_type": bound_type
             })
-            more = input("Add another material? (y/n): ")
+            more = input("Add another material? (y/N): ")
             if more.lower() != "y":
                 break
         return materials
@@ -42,10 +42,6 @@ class ProblemView:
         ncells_x = int(input("Enter number of cells in x-direction: "))
         ncells_y = int(input("Enter number of cells in y-direction: "))
         return ncells_x, ncells_y
-
-    def display_solution(self, solution):
-        print("Solution:")
-        print(solution)
 
     def display_error(self, error_message):
         print(f"Error: {error_message}")
