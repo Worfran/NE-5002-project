@@ -83,12 +83,12 @@ def test_conditionals_two_materials():
 
     material1 = Material(
         name="Material1",
-        sigma_s=0.99,
-        sigma_a=0.01,
+        sigma_s=0.8,
+        sigma_a=0.2,
         mu_0=0.0,
         sigma_f=0.0,
-        s=0.0,
-        bounds=(7.0, 3.0),
+        s=1.0,
+        bounds=(5.0, 10.0),
         bound_type=(1, 1, 1, 1)  # vacuum on all sides
     )
 
@@ -98,8 +98,8 @@ def test_conditionals_two_materials():
         sigma_a=0.2,
         mu_0=0.0,
         sigma_f=0.0,
-        s=1.0,
-        bounds=(6.0, 3.0),
+        s=0.0,
+        bounds=(6.0, 10.0),
         bound_type=(1, 1, 1, 1)
     )
 
@@ -114,12 +114,12 @@ def test_conditionals_two_materials():
         bound_type=(1, 1, 1, 1)
     )
 
-    materials = [material1, material2, material3]
+    materials = [material1, material2]
 
     # --- Mesh setup ---
     # Keep this small so the output is readable; adjust if needed.
-    ncells_x = 25
-    ncells_y = 25
+    ncells_x = 7
+    ncells_y = 7
 
     mesh = Mesh_constructor(ncells_x, ncells_y, materials)
 
@@ -153,30 +153,6 @@ def test_conditionals_two_materials():
         materials,
         mesh.interfaces_x,
     )
-
-    # --- Debug conditionals for selected cells ---
-
-    mid_i = ncells_y // 2  # some interior row
-
-    # Check:
-    #   - left boundary j=0
-    #   - just right of boundary j=1
-    #   - each interface column
-    #   - last two columns
-    cols_to_check = [0, 1] + list(mesh.interfaces_x) + [ncells_x - 2, ncells_x - 1]
-    # Remove duplicates and keep in-range
-    cols_to_check = sorted({j for j in cols_to_check if 0 <= j < ncells_x})
-
-    print("\n--- Debug along middle row (i = mid_i) ---")
-    for j in cols_to_check:
-        debug_cell(mc, mid_i, j)
-
-    # Also check corners
-    print("\n--- Debug corners ---")
-    debug_cell(mc, 0, 0)
-    debug_cell(mc, 0, ncells_x - 1)
-    debug_cell(mc, ncells_y - 1, 0)
-    debug_cell(mc, ncells_y - 1, ncells_x - 1)
     np.savetxt("debug_matrix_A.txt", mc.A)
 
 if __name__ == "__main__":

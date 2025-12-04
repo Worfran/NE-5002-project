@@ -24,7 +24,7 @@ class Plotter:
         solution_matrix = self.vector_to_matrix(solution, n, m)
 
         # Use constrained_layout to avoid overlaps
-        fig, ax = plt.subplots(figsize=(8, 6), constrained_layout=True)
+        fig, ax = plt.subplots(constrained_layout=True)  # Enable constrained layout
 
         # Heatmap
         im = ax.imshow(
@@ -38,11 +38,13 @@ class Plotter:
         ax.set_xlabel("Cell index (x)")
         ax.set_ylabel("Cell index (y)")
         ax.set_title(title)
-        ax.set_xticks(np.arange(m))
-        ax.set_yticks(np.arange(n))
 
-        # --- Colorbar with padding so it doesn't overlap ---
-        cbar = fig.colorbar(im, ax=ax, pad=0.08) 
+        # Adjust ticks to avoid overlap
+        ax.set_xticks(np.arange(0, m, max(1, m // 10)))  
+        ax.set_yticks(np.arange(0, n, max(1, n // 10))) 
+        ax.tick_params(axis='x', rotation=45)  
+
+        cbar = fig.colorbar(im, ax=ax, pad=0.1)  
         if flux_units:
             cbar.set_label(f"Flux [{flux_units}]")
         else:

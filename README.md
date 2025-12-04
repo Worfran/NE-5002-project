@@ -26,7 +26,7 @@ This application is designed to solve the 2D diffusion equation for a neutron tr
 
 ## Output
 The output of the application can be found in the following location:
-- **Directory**: `/path/to/repository/NE_5002_project/output/`
+- **Directory**: `/path/to/repository/NE_5002_project/Output/`
 - **File Format**: SVG for images and TXT for data files.
 
 Ensure to check this directory after running the application for the results.

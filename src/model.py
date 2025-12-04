@@ -1,3 +1,4 @@
+import time
 from src.classes.Material import Material
 from src.classes.Mesh_constructor import Mesh_constructor
 from src.classes.Matrix_constructor import Matrix_constructor
@@ -56,7 +57,8 @@ class ProblemModel:
             self.materials,
             self.mesh.interfaces_x
         )
-        np.savetxt("matrix_A.txt", self.matrix_constructor.A)
+        np.savetxt(f"Output/data/matrix_A.txt-timestamp_{int(time.time())}", self.matrix_constructor.A)
+        np.savetxt(f"Output/data/vector_b.txt-timestamp_{int(time.time())}", self.matrix_constructor.b)
 
 
     def solve(self, method="sor", omega=1.25, max_iter=1000):
