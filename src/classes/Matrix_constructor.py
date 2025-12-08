@@ -98,9 +98,7 @@ class Matrix_constructor:
 
         # ---------- TOP FACE (i-1) ----------
         if has_top:
-            # Interior face: average in y 
-            D_nb = Dcell[i - 1, j]
-            D_face = 0.5 * (D_ij + D_nb)
+            D_face = D_ij
             coeff = D_face * dx / dy
             self.A[ic, ic + n] -= coeff
             sum_aij += coeff
@@ -118,8 +116,7 @@ class Matrix_constructor:
         # ---------- BOTTOM FACE (i+1) ----------
         if has_bottom:
             # Interior face
-            D_nb = Dcell[i + 1, j]
-            D_face = 0.5 * (D_ij + D_nb)
+            D_face = D_ij
             coeff = D_face * dx / dy
             self.A[ic, ic - n] -= coeff
             sum_aij += coeff

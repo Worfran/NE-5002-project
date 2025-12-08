@@ -153,7 +153,6 @@ def test_conditionals_two_materials():
         materials,
         mesh.interfaces_x,
     )
-    np.savetxt("debug_matrix_A.txt", mc.A)
 
 if __name__ == "__main__":
     test_conditionals_two_materials()

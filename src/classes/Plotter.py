@@ -50,11 +50,11 @@ class Plotter:
         else:
             cbar.set_label("Flux")
 
-        # --- Secondary axes in physical coordinates ---
-        def idx_to_xcm(j): return (j + 0.5) * dx
-        def xcm_to_idx(x): return x / dx - 0.5
-        def idx_to_ycm(i): return (i + 0.5) * dy
-        def ycm_to_idx(y): return y / dy - 0.5
+        # Secondary axes in physical coordinates
+        idx_to_xcm = lambda j: (j + 0.5) * dx
+        xcm_to_idx = lambda x: x / dx - 0.5
+        idx_to_ycm = lambda i: (i + 0.5) * dy
+        ycm_to_idx = lambda y: y / dy - 0.5
 
         secax_x = ax.secondary_xaxis('top', functions=(idx_to_xcm, xcm_to_idx))
         secax_y = ax.secondary_yaxis('right', functions=(idx_to_ycm, ycm_to_idx))
